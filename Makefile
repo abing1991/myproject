@@ -28,13 +28,13 @@ include $(MK_BASE_PATH)/.config
 
 DEFINE_LOCAL:= build/core/define_local.mk
 BUILD_MODULE:= build/core/build_module.mk
-include build/core/functions.mk
+include $(MK_BASE_PATH)/build/core/functions.mk
 
 #####################################################################
 
 MK_TOOLCHAIN_PREFIX:=arm-none-eabi-
 MK_OUT_PATH_SEGMENT:= out
-MK_OUT_TARGET:= libyos.a
+MK_OUT_TARGET:= main.a
 
 MK_L_OBJS:=
 MK_L_SDK_OBJS:=
@@ -48,7 +48,7 @@ LDFLAGS:= -r
 
 #####################################################################
 
-#include $(MK_BASE_PATH)/targets/$(CONFIG_TARGET_ROOT_PATH)/CFLAGS.mk
+include $(MK_BASE_PATH)/build/core/CFLAGS.mk
 
 MK_OUT_PATH:= $(MK_OUT_PATH_SEGMENT)
 MK_OUT_PATH_LIB:= $(MK_OUT_PATH)/lib
