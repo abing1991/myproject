@@ -35,9 +35,9 @@ $(L_OBJS): $(MK_OUT_PATH)/auto_config.h $(L_JS_H) $(L_BYTE_H)
 
 sinclude $(L_DEPS)
 
-L_ASM_OBJS:= $(L_ASM_SRCS:%S=$(MK_OUT_PATH)/$(L_MODULE)/%o)
+L_ASM_OBJS:= $(L_ASM_SRCS:%s=$(MK_OUT_PATH)/$(L_MODULE)/%o)
 $(L_ASM_OBJS): PRIVATE_L_CFLAGS:= -c $(L_CFLAGS) $(L_INCS:%=-I%) -include auto_config.h
-$(L_ASM_OBJS): $(MK_OUT_PATH)/$(L_MODULE)/%.o: $(L_PATH)/%.S
+$(L_ASM_OBJS): $(MK_OUT_PATH)/$(L_MODULE)/%.o: $(L_PATH)/%.s
 	@mkdir -p $(dir $@)
 	@echo [AS] $@
 	$(CPRE)$(CC) $(PRIVATE_L_CFLAGS) $(MK_CFLAGS) -o $@ $<

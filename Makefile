@@ -34,7 +34,7 @@ include $(MK_BASE_PATH)/build/core/functions.mk
 
 MK_TOOLCHAIN_PREFIX:=arm-none-eabi-
 MK_OUT_PATH_SEGMENT:= out
-MK_OUT_TARGET:= main.a
+MK_OUT_TARGET:= myproject
 
 MK_L_OBJS:=
 MK_L_SDK_OBJS:=
@@ -44,14 +44,13 @@ MK_L_EXCLUDE_LIBS:=
 MK_CFLAGS:=
 MK_HOST_BIN:=
 
-LDFLAGS:= -r
+LDFLAGS:= -r -T build/target/stm32_flash.ld
 
 #####################################################################
-
 include $(MK_BASE_PATH)/build/core/CFLAGS.mk
 
 MK_OUT_PATH:= $(MK_OUT_PATH_SEGMENT)
-MK_OUT_PATH_LIB:= $(MK_OUT_PATH)/lib
+MK_OUT_PATH_LIB:= $(MK_OUT_PATH)
 
 CC:= $(MK_TOOLCHAIN_PREFIX)gcc
 AR:= $(MK_TOOLCHAIN_PREFIX)ar
@@ -62,7 +61,6 @@ READELF := $(MK_TOOLCHAIN_PREFIX)readelf
 OBJCOPY := $(MK_TOOLCHAIN_PREFIX)objcopy
 
 #####################################################################
-
 .PHONY:startup
 startup: all
 
@@ -75,6 +73,7 @@ $(MK_OUT_PATH)/auto_config.h: $(MK_OUT_PATH)/.config
 #####################################################################
 
 include freertos/build.mk
+include lib/build.mk
+include src/build.mk
 
 include build/core/main.mk
-#####################################################################
