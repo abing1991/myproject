@@ -10,8 +10,8 @@ $(MK_OUT_TARGET_FILE): PRIVATE_LDFLAGS:=$(LDFLAGS)
 TARGET_FILE_OBJS:= $(MK_L_OBJS)
 $(MK_OUT_TARGET_FILE): $(TARGET_FILE_OBJS)
 	@mkdir -p $(dir $@)
-	@echo [AR] $@
-	$(CPRE)$(LD) $(LDFLAGS) -o $@ $^ 
+	@echo [LD] $@
+	$(CPRE)$(CC) $(LDFLAGS) -o $@ $^ 
 	$(CPRE)$(OBJDUMP) -S $(MK_OUT_TARGET_FILE) > $(MK_OUT_TARGET_FILE).asm 
 
 .PHONY:image

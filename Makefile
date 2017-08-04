@@ -44,7 +44,7 @@ MK_L_EXCLUDE_LIBS:=
 MK_CFLAGS:=
 MK_HOST_BIN:=
 
-LDFLAGS:= -r -T build/target/stm32_flash.ld
+LDFLAGS:=
 
 #####################################################################
 include $(MK_BASE_PATH)/build/core/CFLAGS.mk
