@@ -1,10 +1,21 @@
 #include "stm32f10x.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #include "stm32f10x_gpio.h"
 #include "stm32f10x_usart.h"
 #include "stm32f10x_rcc.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#define LED_BLINK_STACK_SIZE 64
+//StackType_t led_blink_TaskStack[LED_BLINK_STACK_SIZE] CCM_RAM;  // Put task stack in CCM
+//StaticTask_t led_blink_TaskBuffer CCM_RAM;  // Put TCB in CCM
+void led_blink(void *p);
+
+#define SERILA_READ_STACK_SIZE 128
+//StackType_t serial_read_TaskStack[SERILA_READ_STACK_SIZE] CCM_RAM;  // Put task stack in CCM
+//StaticTask_t serial_read_TaskBuffer CCM_RAM;  // Put TCB in CCM
+void serial_read(void *p);
 
 #define CONSOLE_USART USART1
 #define USART_PRINTF_BUF_SIZE 128
@@ -86,15 +97,47 @@ void USART_printf (const char *fmt, ...)
     USART_puts (buf);
 }
 
+void led_blink(void *p)
+{
+	//portTickType xLastWakeTime;
+	//xLastWakeTime = xTaskGetTickCount();
+	//int i = 5;
+	while (1) {
+		// if (serial_available()) {
+		// 	serial_write_char(serial_read_char());
+		// }
+		//serial_write_string("led flash!\n");
+    USART_puts("\r\nUSART_puts() led!\r\n");
+		vTaskDelay(900);
+
+    USART_puts("\r\nUSART_puts() led!\r\n");
+		vTaskDelay(900);
+	}
+	vTaskDelete(NULL);
+}
+void serial_read(void *p)
+{
+	// portTickType xLastWakeTime;
+	// xLastWakeTime = xTaskGetTickCount();
+	while (1) {
+		//vPrintString();
+		//serial_write_string("0000000000000000000\n");
+		//serial_write_string(serial_read_line());
+    USART_puts("\r\nUSART_puts() serial!\r\n");
+		//taskYIELD();
+		//vTaskDelay(3);
+		//portYIELD_WITHIN_API();
+	}
+	vTaskDelete(NULL);
+}
+
 /**
   * @brief  Main program
   * @param  None
   * @retval None
   */
-//int a[100];
 int main(void)
 {
-    uint32_t i = 0;
     GPIO_InitTypeDef  GPIO_InitStruct;
     USART_InitTypeDef USART_InitStructure;
 
@@ -132,21 +175,14 @@ int main(void)
     GPIO_SetBits(GPIOB,GPIO_Pin_15);            
 
 
-    USART_puts("\r\nUSART_puts() test!\r\n");
-    //USART_printf("USART_printf() test\r\n");
-    USART_puts("\r\nUSART_puts() test!\r\n");
-    while (1)
-    {
-      USART_puts("\r\nUSART_puts() test!\r\n");
-          //LED0=0;
-    //GPIO_WriteBit(GPIOB,GPIO_Pin_15,Bit_SET);
-    GPIO_SetBits(GPIOB, GPIO_Pin_15);
-    for ( i = 0; i < 0xfffff; i++) { }
-    //LED0=1;
-    GPIO_ResetBits(GPIOB, GPIO_Pin_15);
-    //GPIO_WriteBit(GPIOB, GPIO_Pin_14,Bit_RESET);
-    for ( i = 0; i < 0xfffff; i++) { }
-    }
+	// Create a task
+	// Stack and TCB are placed in CCM of STM32F4
+	// The CCM block is connected directly to the core, which leads to zero wait states
+	xTaskCreate(led_blink, (signed char*)"led_blink", LED_BLINK_STACK_SIZE, NULL, 4, NULL);
+	xTaskCreate(serial_read, (signed char*)"serial_read", SERILA_READ_STACK_SIZE, NULL, 2, NULL);
+	vTaskStartScheduler();  // should never return
+
+	for (;;);
 }
 
 /**

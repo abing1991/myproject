@@ -11,6 +11,7 @@ L_INCS := \
 	$(L_PATH)/portable/GCC/ARM_CM3
 
 L_SRCS += tasks.c
+L_SRCS += ./portable/MemMang/heap_2.c
 L_SRCS += timers.c
 L_SRCS += queue.c
 L_SRCS += list.c

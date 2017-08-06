@@ -43,7 +43,6 @@ MK_L_PRE_LIBS:=
 MK_L_EXCLUDE_LIBS:=
 MK_CFLAGS:=
 MK_HOST_BIN:=
-
 LDFLAGS:=
 
 #####################################################################

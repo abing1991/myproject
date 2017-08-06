@@ -1,6 +1,8 @@
 COMMONFLAGS = -mcpu=cortex-m3 -mthumb -mlittle-endian
 COMMONFLAGS += -msoft-float
 MK_CFLAGS    = $(COMMONFLAGS)
+INCLUDEPATH  += -I$(MK_BASE_PATH)/freertos/include
+INCLUDEPATH  += -I$(MK_BASE_PATH)/freertos/portable/GCC/ARM_CM3
 MK_CFLAGS    += -ggdb3 $(INCLUDEPATH) -c
 
 MK_CFLAGS    += -Wall -Wextra
